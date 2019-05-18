@@ -6,14 +6,23 @@ from time import sleep
 import random
 import argparse
 import glob
+import urllib.request
 from sys import argv
 
 import git
 
 github_repo = "git://github.com/radams15/word_tester.git"
 
+def internet_connected(reference):
+    try:
+        urllib.request.urlopen(reference, timeout=1)
+        return True
+    except urllib.request.URLError:
+        return False
 
 def needs_updating():
+    if not internet_connected():
+        return False
     """TODO"""
     return True
 
@@ -51,6 +60,7 @@ if __name__ == "__main__":
     if needs_updating():
         update()
         #execv(path.basename(__file__), argv)
+        exit()
 
     parser = argparse.ArgumentParser()
 
