@@ -5,6 +5,7 @@ from shutil import move, rmtree
 from time import sleep
 import random
 import argparse
+import glob
 from sys import argv
 
 import git
@@ -13,6 +14,7 @@ github_repo = "git://github.com/radams15/word_tester.git"
 
 
 def needs_updating():
+    """TODO"""
     return True
 
 def update():
@@ -21,7 +23,8 @@ def update():
     rename(path.basename(__file__), ".old_main.py")
     git.Repo.clone_from(github_repo, "./.download")
 
-    move("./.download/*", ".")
+    for file in glob.glob("./.download/*.py"):
+        move(file, f"./{path.basename(file)}")
 
     remove(".old_main.py")
 
