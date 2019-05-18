@@ -60,12 +60,13 @@ def get_words_from_file(file_name):
 if __name__ == "__main__":
     if needs_updating():
         update()
-        execv(path.basename(__file__), argv)
+        execv(path.basename(__file__), argv.append("--noupdate"))
         exit()
 
     parser = argparse.ArgumentParser()
 
     parser.add_argument("words")
+    parser.add_argument("-u", "--noupdate", action='store_true')
     parser.add_argument("-w" "--wait", type=float, dest="wait")
 
     args = parser.parse_args()
