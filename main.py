@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import json
-from os import path, system, makedirs, chdir, execv, rename, remove
+from os import path, system, makedirs, execv, rename, remove
 from shutil import move, rmtree
 from time import sleep
 import random
@@ -42,7 +42,6 @@ def update():
 
 
 def clear():
-    return
     system("clear")
 
 clear()
@@ -61,7 +60,7 @@ def get_words_from_file(file_name):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("words")
+    parser.add_argument("words_file")
     parser.add_argument("-u", "--noupdate", action='store_true')
     parser.add_argument("-w" "--wait", type=float, dest="wait")
     args = parser.parse_args()
@@ -76,18 +75,12 @@ if __name__ == "__main__":
     if args.wait:
         wait_time = args.wait
 
-    split_file_name = args.words.split(".")
+    split_file_name = args.words_file.split(".")
 
     if "json" != split_file_name[-1]:
         split_file_name.append("json")
 
     save_file = ".".join(split_file_name)
-
-    data_folder = "wordtester"
-
-    if not path.exists(data_folder):
-        makedirs(data_folder)
-    chdir(data_folder)
 
     words = get_words_from_file(save_file)
     while True:
@@ -98,6 +91,6 @@ if __name__ == "__main__":
         if response.lower() == answer.lower():
             print("Correct!")
         else:
-            print("Wrong!\n{} means {}".format(prompt, answer))
+            print("Wrong!\n{} => {}".format(prompt, answer))
         sleep(wait_time)
         clear()
