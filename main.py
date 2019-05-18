@@ -42,7 +42,6 @@ def update():
 
 
 def clear():
-    return
     system("clear")
 
 clear()
