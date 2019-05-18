@@ -9,13 +9,11 @@ import glob
 import urllib.request
 from sys import argv
 
-import git
-
 github_repo = "git://github.com/radams15/word_tester.git"
 
-def internet_connected(reference):
+def internet_connected():
     try:
-        urllib.request.urlopen(reference, timeout=1)
+        urllib.request.urlopen("https://www.google.co.uk", timeout=1)
         return True
     except urllib.request.URLError:
         return False
@@ -23,10 +21,13 @@ def internet_connected(reference):
 def needs_updating():
     if not internet_connected():
         return False
-    """TODO"""
-    return True
+    else:
+        """TODO"""
+        return True
 
 def update():
+    import git
+
     if not path.exists("./.download"):
         makedirs("./.download")
     rename(path.basename(__file__), ".old_main.py")
@@ -41,6 +42,7 @@ def update():
 
 
 def clear():
+    return
     system("clear")
 
 clear()
@@ -59,7 +61,7 @@ def get_words_from_file(file_name):
 if __name__ == "__main__":
     if needs_updating():
         update()
-        #execv(path.basename(__file__), argv)
+        execv(path.basename(__file__), argv)
         exit()
 
     parser = argparse.ArgumentParser()
@@ -85,8 +87,6 @@ if __name__ == "__main__":
     if not path.exists(data_folder):
         makedirs(data_folder)
     chdir(data_folder)
-
-
 
     words = get_words_from_file(save_file)
     while True:
