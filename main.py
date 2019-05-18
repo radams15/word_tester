@@ -1,34 +1,32 @@
 #!/usr/bin/python3
 import json
-from os import path, system, makedirs, sep, chdir
+from os import path, system, makedirs, chdir, execv, rename, remove
+from shutil import move, rmtree
 from time import sleep
 import random
 import argparse
+from sys import argv
 
 import git
 
-parser = argparse.ArgumentParser()
+github_repo = "git://github.com/radams15/word_tester.git"
 
-parser.add_argument("words")
-parser.add_argument("-w" "--wait", type=int)
 
-args = parser.parse_args()
+def needs_updating():
+    return True
 
-split_file_name = args.words.split(".")
+def update():
+    if not path.exists("./.download"):
+        makedirs("./.download")
+    rename(path.basename(__file__), ".old_main.py")
+    git.Repo.clone_from(github_repo, "./.download")
 
-if ".json" != split_file_name[-1]:
-    split_file_name.append(".json")
+    move("./.download/*", ".")
 
-if args.wait:
-    wait_time = args.wait
+    remove(".old_main.py")
 
-save_file = ".".join(split_file_name)
+    rmtree("./.download/")
 
-data_folder = "wordtester"
-
-if not path.exists(data_folder):
-    makedirs(data_folder)
-chdir(data_folder)
 
 def clear():
     system("clear")
@@ -47,6 +45,36 @@ def get_words_from_file(file_name):
         exit()
 
 if __name__ == "__main__":
+    if needs_updating():
+        update()
+        #execv(path.basename(__file__), argv)
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("words")
+    parser.add_argument("-w" "--wait", type=float, dest="wait")
+
+    args = parser.parse_args()
+
+    wait_time = 2
+    if args.wait:
+        wait_time = args.wait
+
+    split_file_name = args.words.split(".")
+
+    if "json" != split_file_name[-1]:
+        split_file_name.append("json")
+
+    save_file = ".".join(split_file_name)
+
+    data_folder = "wordtester"
+
+    if not path.exists(data_folder):
+        makedirs(data_folder)
+    chdir(data_folder)
+
+
+
     words = get_words_from_file(save_file)
     while True:
         prompt = random.choice(list(words.keys()))
