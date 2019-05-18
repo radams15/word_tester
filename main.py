@@ -67,7 +67,8 @@ if __name__ == "__main__":
 
     if needs_updating() and not args.noupdate:
         update()
-        execv(path.basename(__file__), list(argv.append("--noupdate")))
+        argv.append("--noupdate")
+        execv(path.basename(__file__), argv)
         exit()
 
     wait_time = 2
